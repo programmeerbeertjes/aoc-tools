@@ -1,0 +1,11 @@
+# Any dot dir (including cache and venv)
+\.*/
+
+# Python compiled files
+__pycache__/
+
+# Pyproject metadata
+*egg-info/
+
+# Build files
+build/
