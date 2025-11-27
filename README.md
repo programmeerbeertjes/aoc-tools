@@ -85,7 +85,8 @@ puzzle_input = fetch_input()
 code_blocks = fetch_code()  # list of code blocks
 examples = fetch_example()  # list of example blocks
 
-submit(12345, part=2)
+# Submit to today's puzzle and unsolved part
+submit(12345)
 ```
 
 ### CLI
@@ -110,6 +111,12 @@ aoc fetch example
 # Use a custom separator
 aoc fetch example --sep "\n---\n"
 
-# Submit answer
-aoc submit 1234 --part 2
+# Submit single answer
+aoc submit 1234
+
+# Submit two answers
+aoc submit 1234 5678
+
+# Submit from stdin
+echo '1234\nabcd' | aoc submit
 ```
