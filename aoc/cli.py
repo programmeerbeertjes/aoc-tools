@@ -8,6 +8,7 @@ from .errors import (
     MissingCookieError,
     InputNotFoundError,
     FormNotFoundError,
+    WrongLevelError,
     WrongAnswerError,
     AlreadyCompletedError,
 )
@@ -74,20 +75,34 @@ def fetch_example(year: Optional[int] = None, day: Optional[int] = None,
 
 
 @cli.command()
-@click.argument('answer', required=False)
+@click.argument('first_answer', required=False)
+@click.argument('second_answer', required=False)
 @click.option('--year', type=int, help='Year of the puzzle')
 @click.option('--day', type=int, help='Day of the puzzle')
-@click.option('--part', type=int, help='Puzzle part')
-def submit(answer, year: Optional[int] = None, day: Optional[int] = None, part: Optional[int] = None):
-    """Submit an answer to AoC."""
-    if answer is None:
-        answer = sys.stdin.read().strip()
-    if not answer:
-        click.echo("No answer provided", err=True)
+def submit(first_answer, second_answer, year: Optional[int] = None, day: Optional[int] = None):
+    """Submit one or two answers to AoC."""
+
+    lines = [line.strip() for line in sys.stdin if line.strip()]
+
+    if first_answer is None and not lines:
+        click.echo("No answers provided", err=True)
         sys.exit(2)
 
+    if first_answer and lines:
+        click.echo("Cannot mix command-line answers and stdin input", err=True)
+        sys.exit(2)
+
+    if len(lines) > 2:
+        click.echo("Too many answers; expected 1 or 2", err=True)
+        sys.exit(2)
+
+    # If no arguments, read lines from stdin and strip blank lines
+    if first_answer is None:
+        first_answer = lines[0]
+        second_answer = lines[1] if len(lines) == 2 else None
+
     try:
-        msg = api.submit(answer, year=year, day=day, part=part)
+        msg = api.submit(first_answer, second_answer, year=year, day=day)
         click.echo(msg)
         sys.exit(0)
     except WrongAnswerError as e:
@@ -96,7 +111,7 @@ def submit(answer, year: Optional[int] = None, day: Optional[int] = None, part: 
     except AlreadyCompletedError as e:
         click.echo(str(e), err=True)
         sys.exit(3)
-    except (MissingCookieError, FormNotFoundError, InputNotFoundError, AOCError) as e:
+    except (MissingCookieError, FormNotFoundError, InputNotFoundError, WrongLevelError, AOCError) as e:
         click.echo(str(e), err=True)
         sys.exit(4)
     except Exception as e:

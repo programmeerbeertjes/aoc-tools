@@ -1,8 +1,4 @@
-"""HTML parsing helpers using BeautifulSoup for AoC.
-
-Functions return plain Python types and raise FormNotFoundError / InputNotFoundError
-when expected content is missing.
-"""
+"""HTML parsing helpers using BeautifulSoup for AoC."""
 
 from __future__ import annotations
 
@@ -11,8 +7,6 @@ import re
 
 from bs4 import BeautifulSoup
 from bs4.element import Tag
-
-from .errors import FormNotFoundError
 
 
 def _find_tag(elem, name: str) -> Optional[Tag]:
@@ -103,6 +97,8 @@ def parse_submission_response(html: str) -> SubmissionResult:
         return SubmissionResult("correct", text)
     if "that's not the right answer" in lowered:
         return SubmissionResult("wrong", text)
+    if "you don't seem to be solving the right level" in lowered:
+        return SubmissionResult("incorrect_level", text)
     if not _find_tag(soup, "input") or not soup.find("input", attrs={"name": "level"}):
         return SubmissionResult("no_form", text or "No submission form found on page")
     return SubmissionResult("unknown", text or "No recognizable message found")

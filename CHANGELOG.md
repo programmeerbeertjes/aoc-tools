@@ -32,3 +32,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 
 - Fallback for input parser from the puzzle HTML. Fetching input will always look in the puzzle URL with the `/input` suffix.
+
+## [0.3.0] - 2025-11-27
+
+### Changed
+
+- Command `aoc fetch` and its Python equivalent can take two answers. See usage in the README for more details.

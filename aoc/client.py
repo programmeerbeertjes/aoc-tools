@@ -63,16 +63,12 @@ def fetch_input(year: Optional[int] = None, day: Optional[int] = None) -> str:
     return resp.text
 
 
-def submit_answer(answer: str, year: Optional[int] = None, day: Optional[int] = None, level: Optional[int] = None) -> str:
+def submit_answer(answer: str, level: int, year: Optional[int] = None, day: Optional[int] = None) -> str:
     """POST an answer to AoC and return the response HTML.
-
-    If level is None, the caller should ensure it is set by parsing the page.
+    
+    Callers should specify a level parameter (which puzzle part to send).
     """
     year, day = _default_year_day(year, day)
-    if level is None:
-        # submit to what the endpoint expects anyway — caller normally determines level
-        raise ValueError("level must be provided by caller")
-
     url = f"{BASE}/{year}/day/{day}/answer"
     data = {"level": str(level), "answer": str(answer)}
     resp = requests.post(url, cookies={"session": _get_cookie()}, data=data)

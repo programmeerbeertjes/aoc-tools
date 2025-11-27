@@ -31,6 +31,27 @@ def test_submit_correct(mock_submit_answer, mock_get_day_html):
     result = submit(1234, year=2023, day=1)
     assert result == "That's the right answer!"
 
+@patch("aoc.client.fetch_page")
+@patch("aoc.client.submit_answer", return_value="<article><p>That's the right answer!</p></article>")
+def test_submit_both_correct(mock_submit_answer, mock_page):
+    mock_page.side_effect = [
+        "<form><input type='hidden' name='level' value='1'></form>",
+        "<form><input type='hidden' name='level' value='2'></form>"
+    ]
+    import time
+    start = time.perf_counter()
+    msg = submit(1234, "abcd", year=2023, day=1)
+    end = time.perf_counter()
+    # Sleep of ~1s should have happened
+    assert end - start >= 1
+    assert msg == "That's the right answer!\nThat's the right answer!"
+
+@patch("aoc.client.fetch_page", return_value="<form><input type='hidden' name='level' value='2'></form>")
+@patch("aoc.client.submit_answer", return_value="<article><p>That's the right answer!</p></article>")
+def test_submit_only_part_two(mock_submit, mock_page):
+    msg = submit("1234", 5678, year=2023, day=1)
+    assert msg == "That's the right answer!"
+
 @patch("aoc.client.fetch_page", return_value="<form><input type='hidden' name='level' value='2'></form>")
 @patch("aoc.client.submit_answer", return_value="<article><p>That's not the right answer</p></article>")
 def test_submit_wrong_answer(mock_submit_answer, mock_get_day_html):
