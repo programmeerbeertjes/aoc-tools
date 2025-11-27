@@ -1,9 +1,18 @@
 """Public API for the aoc package.
 
-Expose fetch() and submit() functions for direct import.
+Expose fetching and submission functions for direct import.
 """
 
-from .api import fetch, submit
+from .api import (
+    fetch_input,
+    fetch_code,
+    fetch_example,
+    submit,
+)
 
-# Used for * imports
-__all__ = ["fetch", "submit"]
+__all__ = [
+    "fetch_input",
+    "fetch_code",
+    "fetch_example",
+    "submit",
+]
