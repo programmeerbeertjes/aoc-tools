@@ -1,6 +1,6 @@
 [project]
 name = "aoc"
-version = "0.4.0"
+version = "0.4.1"
 description = "Advent of Code tools"
 readme = "README.md"
 license = "MIT"
@@ -21,6 +21,12 @@ dev = [
 [build-system]
 requires = ["setuptools>=65", "wheel"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["aoc"]
+
+[tool.setuptools.package-data]
+aoc = ["py.typed"]
 
 [project.urls]
 Repository = "https://github.com/programmeerbeertjes/aoc-tools.git"
