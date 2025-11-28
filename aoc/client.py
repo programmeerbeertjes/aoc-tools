@@ -9,68 +9,40 @@ Responsibilities:
 This module purposely avoids interpreting HTML; it returns raw text for parser.py to handle.
 """
 
-from __future__ import annotations
-
-import os
-from typing import Optional
-import datetime
-
 import requests
-
-from .errors import MissingCookieError
 
 BASE = "https://adventofcode.com"
 
 
-def _get_cookie() -> str:
-    cookie = os.getenv("AOC_COOKIE")
-    if not cookie:
-        raise MissingCookieError("Environment variable AOC_COOKIE not set")
-    return cookie
-
-
-def _default_year_day(year: Optional[int], day: Optional[int]) -> tuple[int, int]:
-    if year is None or day is None:
-        today = datetime.date.today()
-    if year is None:
-        year = int(os.getenv("AOC_YEAR", today.year))
-    if day is None:
-        day = int(os.getenv("AOC_DAY", today.day))
-    return year, day
-
-
-def fetch_page(year: Optional[int] = None, day: Optional[int] = None) -> str:
+def fetch_page(year: int, day: int) -> str:
     """GET the AoC problem page HTML for year/day (authenticated).
 
-    Returns raw HTML string.
+    Returns raw HTML string. Cookie not necessary.
     """
-    year, day = _default_year_day(year, day)
     url = f"{BASE}/{year}/day/{day}"
-    resp = requests.get(url, cookies={"session": _get_cookie()})
+    resp = requests.get(url)
     resp.raise_for_status()
     return resp.text
 
 
-def fetch_input(year: Optional[int] = None, day: Optional[int] = None) -> str:
+def fetch_input(year: int, day: int, cookie: str) -> str:
     """GET the raw puzzle input for year/day (authenticated).
 
-    Returns the plain text input body.
+    Returns the plain text input body. Cookie-specific.
     """
-    year, day = _default_year_day(year, day)
     url = f"{BASE}/{year}/day/{day}/input"
-    resp = requests.get(url, cookies={"session": _get_cookie()})
+    resp = requests.get(url, cookies={"session": cookie})
     resp.raise_for_status()
     return resp.text
 
 
-def submit_answer(answer: str, level: int, year: Optional[int] = None, day: Optional[int] = None) -> str:
+def submit_answer(answer: str, year: int, day: int, level: int, cookie: str) -> str:
     """POST an answer to AoC and return the response HTML.
     
     Callers should specify a level parameter (which puzzle part to send).
     """
-    year, day = _default_year_day(year, day)
     url = f"{BASE}/{year}/day/{day}/answer"
     data = {"level": str(level), "answer": str(answer)}
-    resp = requests.post(url, cookies={"session": _get_cookie()}, data=data)
+    resp = requests.post(url, cookies={"session": cookie}, data=data)
     resp.raise_for_status()
     return resp.text

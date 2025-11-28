@@ -2,6 +2,10 @@ class AOCError(Exception):
     """Base class for AoC errors."""
 
 
+class UnknownDateError(AOCError):
+    pass
+
+
 class MissingCookieError(AOCError):
     pass
 

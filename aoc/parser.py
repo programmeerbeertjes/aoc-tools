@@ -1,7 +1,5 @@
 """HTML parsing helpers using BeautifulSoup for AoC."""
-
-from __future__ import annotations
-
+from dataclasses import dataclass
 from typing import Optional, Union
 import re
 
@@ -34,7 +32,12 @@ def extract_level(html: str) -> Optional[int]:
 def extract_code(html: str, idx: Optional[int] = None, sep: str = "\n") -> Union[str, list[str]]:
     """Extract <pre><code> blocks from HTML."""
     soup = BeautifulSoup(html, "html.parser")
-    blocks = [code.get_text() for code in soup.find_all("code") if code.parent.name == "pre"]
+    blocks = []
+
+    for pre in soup.find_all("pre"):
+        code = pre.find("code")
+        if code is not None:
+            blocks.append(code.get_text())
     
     if idx is not None:
         try:
@@ -69,18 +72,10 @@ def extract_example(html: str, idx: Optional[int] = None, sep: str = "\n") -> Un
             raise IndexError(f"No example block at {idx=}")
     return sep.join(candidates)
 
-
+@dataclass
 class SubmissionResult:
     kind: str
     message: str
-
-    def __init__(self, kind: str, message: str):
-        self.kind = kind
-        self.message = message
-
-    def __repr__(self) -> str:
-        return f"SubmissionResult(kind={self.kind!r}, message={self.message!r})"
-
 
 def parse_submission_response(html: str) -> SubmissionResult:
     """Parse AoC submission response HTML."""

@@ -38,3 +38,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - Command `aoc fetch` and its Python equivalent can take two answers. See usage in the README for more details.
+
+## [0.3.1] - 2025-11-27
+
+### Added
+
+- Local configuration file `.aoc.toml` for setting year, day, and cookie
+- A new `aoc config` command to create, change, and clear this config.
+- A new `--date` option on all CLI commands, which can be supplied a string in the format `YYYY/DD`, `YYYY/D` or the literal `today`
+
+### Changed
+
+- The `client.py` no longer accepts optional `year` or `day`.
+

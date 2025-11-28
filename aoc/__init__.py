@@ -10,9 +10,12 @@ from .api import (
     submit,
 )
 
+from .config import config
+
 __all__ = [
     "fetch_input",
     "fetch_code",
     "fetch_example",
     "submit",
+    "config"
 ]
