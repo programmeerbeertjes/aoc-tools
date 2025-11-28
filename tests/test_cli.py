@@ -2,6 +2,7 @@ import pytest
 from click.testing import CliRunner
 from unittest.mock import patch
 from aoc.cli import cli
+from aoc import config
 
 @pytest.fixture
 def runner():
@@ -67,3 +68,15 @@ def test_cli_submit_three_stdin(runner):
     result = runner.invoke(cli, ["submit"], input="1\n2\n3\n")
     assert result.exit_code == 2
     assert "Too many answers" in result.output
+
+@patch("aoc.api.fetch_input", return_value="INPUT")
+def test_cli_fetch_input_today(mock_fetch, runner):
+    result = runner.invoke(cli, ["fetch", "input", "--date", "today"])
+    assert result.exit_code == 0
+    assert "INPUT" in result.output
+
+@patch("aoc.api.submit", return_value="OK")
+def test_cli_submit_today(mock_submit, runner):
+    result = runner.invoke(cli, ["submit", "1234", "--date", "today"])
+    assert result.exit_code == 0
+    assert "OK" in result.output

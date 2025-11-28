@@ -36,9 +36,9 @@ class _Config:
       - config.list() -> dict
     """
 
-    def __init__(self):
+    def __init__(self, path=None):
         # If a config file exists upwards, remember it and load data.
-        self._path: Optional[Path] = find_config_file()
+        self._path: Optional[Path] = find_config_file(path)
         self._data: dict[str, Any] = {}
         if self._path:
             try:

@@ -1,4 +1,5 @@
 import sys
+from datetime import date as _date
 from typing import Optional, Tuple
 
 import click
@@ -46,7 +47,7 @@ class DateOption(click.ParamType):
 
     def convert(self, value, param, ctx):
         if value == "today":
-            today = date.today()
+            today = _date.today()
             return today.year, today.day
 
         try:
