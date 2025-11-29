@@ -75,11 +75,10 @@ pip install -r requirements.txt
 ### Python
 
 ```python
-import os
-os.environ["AOC_YEAR"] = 2023  # Set year 2023
-os.environ["AOC_DAY"] = 1  # Set first day
+from aoc import config, fetch_input, fetch_code, fetch_example, submit
 
-from aoc import fetch_input, fetch_code, fetch_example, submit
+# Uses 2023, first day
+config.date = 2023, 1
 
 puzzle_input = fetch_input()
 code_blocks = fetch_code()  # list of code blocks
@@ -96,6 +95,10 @@ submit(12345)
 export AOC_YEAR=2023
 export AOC_DAY=1
 
+# Alternatively, use the config feature
+# This creates a .aoc.toml in your cwd
+aoc config set date 2023/1
+
 # Fetch puzzle input
 aoc fetch input
 
@@ -103,7 +106,7 @@ aoc fetch input
 aoc fetch code
 
 # Fetch the second code block (0-based)
-aoc fetch code --idx 1
+aoc fetch code -i 1
 
 # Fetch example blocks (code blocks preceded by for example)
 aoc fetch example
